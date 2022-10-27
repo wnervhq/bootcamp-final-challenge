@@ -19,8 +19,9 @@
     "strict": true,
     "target": "es2015",
     "types": ["node"],
-    "lib": ["es2020", "esnext.asynciterable"],
-    "baseUrl": "src"
+    "lib": ["dom","es2020", "esnext.asynciterable"],
+    "baseUrl": "src",
+    "noImplicitAny": false
   },
   "exclude": [
     "**/coverage/",
