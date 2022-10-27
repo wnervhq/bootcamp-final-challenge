@@ -1,0 +1,59 @@
+version: "3"
+
+services:
+  
+  # hello-world-nginx Nginx ReverseProxy 
+  nginx_reverse_proxy:
+    container_name: nginx_nexus
+    image: nginx_nexus
+    build: ../hello-world-nginx
+    volumes:
+      - ../hello-world-nginx/templates:/etc/nginx/templates
+    env_file:
+      - .env
+    environment:
+      NGINX_SET_WORKERS: $ENV_NGINX_SET_WORKERS
+      NGINX_PORT_INT: $ENV_NGINX_PORT_INT
+      ENDPOINT_1: $ENV_ENDPOINT_1
+      ENDPOINT_1_PORT: $ENV_ENDPOINT_1_PORT
+      ENDPOINT_1_HOST: $ENV_ENDPOINT_1_HOST
+      ENDPOINT_2: $ENV_ENDPOINT_2
+      ENDPOINT_2_PORT: $ENV_ENDPOINT_2_PORT
+      ENDPOINT_2_HOST: $ENV_ENDPOINT_2_HOST
+    ports:
+      - "$ENV_NGINX_PORT_EXT:$ENV_NGINX_PORT_INT"
+    networks:
+      - hellodevops-net
+  
+  # hello-world-nodejs Endpoint1
+  hello-nodejs:
+    container_name: hello_node_nexus
+    image: hello_node_nexus
+    build: ../hello-world-nodejs
+    restart: on-failure
+    env_file:
+      - .env
+    environment:
+      PORT: $ENV_ENDPOINT_1_PORT
+    networks:
+      - hellodevops-net
+    depends_on:
+      - nginx_reverse_proxy
+
+  # hello-world-golang Endpoint2
+  hello-golang:
+    container_name: hello_golan_nexus
+    image: hello_golan_nexus
+    build: ../hello-world-golang
+    env_file:
+      - .env
+    environment:
+      PORT: $ENV_ENDPOINT_2_PORT
+    networks:
+      - hellodevops-net
+    depends_on:
+      - nginx_reverse_proxy
+
+networks:
+  hellodevops-net:
+    driver: bridge
