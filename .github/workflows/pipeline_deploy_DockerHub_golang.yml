@@ -8,6 +8,7 @@ env:
   REGISTRY: wnervhq
   IMAGE_NAME: final-challenge-bootcamp-golang
   REGISTRY_MAIL: luis.molina.calizaya@gmail.com
+  FOLDER_APP: hello-world-golang
 
 jobs:
 
@@ -50,7 +51,7 @@ jobs:
 
       - name: Build an image from Dockerfile
         run: |
-          docker build -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }} .
+          docker build -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }} ${{ env.FOLDER_APP }}/dockerfile
 
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
