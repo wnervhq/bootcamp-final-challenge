@@ -4,15 +4,17 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"os"
 )
 
 var scores = make(map[string]int)
+var port = os.Getenv("PORT")
 
 func main() {
 	http.HandleFunc("/hello", HelloServer)
 	http.HandleFunc("/inc-score", IncrementCounter)
 	http.HandleFunc("/get-scores", GetScores)
-	http.ListenAndServe(":3002", nil)
+	http.ListenAndServe(":" + port, nil)
 }
 
 func HelloServer(w http.ResponseWriter, r *http.Request) {
