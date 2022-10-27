@@ -1,0 +1,18 @@
+server {
+    listen ${NGINX_PORT_INT};
+    location = /health {
+        access_log off;
+        log_not_found off;
+        return 200 'healthy';
+       }
+
+    location ^~ /${ENDPOINT_1}/ {
+        # rewrite ^/${ENDPOINT_1}(.*) /break;
+        proxy_pass http://${ENDPOINT_1_HOST}:${ENDPOINT_1_PORT}/;
+    }
+
+    location ^~ /${ENDPOINT_2}/ {
+        # rewrite ^/${ENDPOINT_2}(.*) /break;
+        proxy_pass http://${ENDPOINT_2_HOST}:${ENDPOINT_2_PORT}/;
+    }
+}
