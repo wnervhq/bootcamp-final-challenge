@@ -27,13 +27,16 @@ jobs:
         with:
           go-version: ${{ matrix.go-version }}
           cache: true
-      - name: Install dependencies
-        run: go get .
+      # - name: Install dependencies
+      #   run: go get .
       - name: Build
         run: go build -v ./...
 
   SECRET:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./${{ env.FOLDER_APP }}
     needs: init
     name: Secret-Scanner
     steps:
@@ -46,6 +49,9 @@ jobs:
 
   trivy-security:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./${{ env.FOLDER_APP }}
     needs: init
     continue-on-error: true
     steps:
@@ -71,6 +77,9 @@ jobs:
 
   build-docker:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./${{ env.FOLDER_APP }}
     needs: trivy-security
     steps:
     - uses: actions/checkout@v3
