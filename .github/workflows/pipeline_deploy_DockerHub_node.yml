@@ -29,7 +29,6 @@ jobs:
         cache: 'npm'
         cache-dependency-path: "./${{ env.FOLDER_APP }}/package.json"
     - run: npm install
-    - run: npm test
 
   SECRET:
     runs-on: ubuntu-18.04
