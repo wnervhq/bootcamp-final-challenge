@@ -27,10 +27,9 @@ jobs:
         with:
           go-version: ${{ matrix.go-version }}
           cache: true
-      # - name: Install dependencies
-      #   run: go get .
       - name: Build
-        run: go build -v ./...
+        # run: go build -v ./...
+        run: go build -o app app.go
 
   SECRET:
     runs-on: ubuntu-latest
