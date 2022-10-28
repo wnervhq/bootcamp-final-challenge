@@ -72,6 +72,9 @@ jobs:
 
   build-docker:
     runs-on: ubuntu-18.04
+    defaults:
+      run:
+        working-directory: ./${{ env.FOLDER_APP }}
     needs: trivy-security
     steps:
     - uses: actions/checkout@v3
