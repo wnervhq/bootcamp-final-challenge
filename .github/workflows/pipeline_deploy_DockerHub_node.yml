@@ -32,6 +32,9 @@ jobs:
 
   SECRET:
     runs-on: ubuntu-18.04
+    defaults:
+      run:
+        working-directory: ./${{ env.FOLDER_APP }}
     needs: init
     name: Secret-Scanner
     steps:
@@ -90,5 +93,6 @@ jobs:
     - name: Build and push
       uses: docker/build-push-action@v3
       with:
+        context: "{{defaultContext}}:${{ env.FOLDER_APP }}"
         push: true
         tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
