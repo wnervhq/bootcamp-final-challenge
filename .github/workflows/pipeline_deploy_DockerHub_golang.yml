@@ -26,11 +26,10 @@ jobs:
         uses: actions/setup-go@v3
         with:
           go-version: ${{ matrix.go-version }}
+          check-latest: true
           cache: true
-      - name: Build
-        # run: go build -v ./...
-        run: go build -o app app.go
-
+      - run: go run app.go
+    
   SECRET:
     runs-on: ubuntu-latest
     defaults:
