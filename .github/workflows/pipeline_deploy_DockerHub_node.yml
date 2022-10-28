@@ -44,6 +44,9 @@ jobs:
 
   trivy-security:
     runs-on: ubuntu-18.04
+    defaults:
+      run:
+        working-directory: ./${{ env.FOLDER_APP }}
     needs: init
     continue-on-error: true
     steps:
