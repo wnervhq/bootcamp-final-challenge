@@ -17,10 +17,12 @@ jobs:
     strategy:
       matrix:
         go-version: [1.19]
+    defaults:
+      run:
+        working-directory: ./${{ env.FOLDER_APP }}
     steps:
       - uses: actions/checkout@v3
       - name: Setup Go ${{ matrix.go-version }}
-        working-directory: ${{ env.FOLDER_APP }}
         uses: actions/setup-go@v3
         with:
           go-version: ${{ matrix.go-version }}

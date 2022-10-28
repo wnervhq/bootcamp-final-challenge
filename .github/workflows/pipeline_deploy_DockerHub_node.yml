@@ -17,14 +17,17 @@ jobs:
     strategy:
       matrix:
         node-version: [14.x]
+    defaults:
+      run:
+        working-directory: ./${{ env.FOLDER_APP }}
     steps:
     - uses: actions/checkout@v3
     - name: Use Node.js ${{ matrix.node-version }}
-      working-directory: ${{ env.FOLDER_APP }}
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+        cache-dependency-path: "./${{ env.FOLDER_APP }}/package.json"
     - run: npm install
     - run: npm test
 
