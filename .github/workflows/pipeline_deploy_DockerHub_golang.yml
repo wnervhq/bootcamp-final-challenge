@@ -78,7 +78,7 @@ jobs:
     defaults:
       run:
         working-directory: ./${{ env.FOLDER_APP }}
-    needs: trivy-security
+    # needs: trivy-security
     steps:
     - uses: actions/checkout@v3
     - name: Set up QEMU
