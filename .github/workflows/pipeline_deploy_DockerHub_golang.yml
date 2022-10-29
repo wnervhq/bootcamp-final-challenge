@@ -12,73 +12,76 @@ env:
 
 jobs:
 
-  # init:
-  #   runs-on: ubuntu-latest
-  #   strategy:
-  #     matrix:
-  #       go-version: [1.19]
-  #   defaults:
-  #     run:
-  #       working-directory: ./${{ env.FOLDER_APP }}
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #     - name: Setup Go ${{ matrix.go-version }}
-  #       uses: actions/setup-go@v3
-  #       with:
-  #         go-version: ${{ matrix.go-version }}
-  #         check-latest: true
-  #         cache: true
-  #     - run: go run app.go
+  init:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        go-version: [1.19]
+    defaults:
+      run:
+        working-directory: ./${{ env.FOLDER_APP }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Go ${{ matrix.go-version }}
+        uses: actions/setup-go@v3
+        with:
+          go-version: ${{ matrix.go-version }}
+          check-latest: true
+          cache: true
+      - name: Build
+        run: go build -o app app.go
+      # - run: go run app.go
     
-  # SECRET:
-  #   runs-on: ubuntu-latest
-  #   defaults:
-  #     run:
-  #       working-directory: ./${{ env.FOLDER_APP }}
-  #   needs: init
-  #   name: Secret-Scanner
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #       with:
-  #         fetch-depth: 0
-  #     - name: Secret Detection
-  #       uses: zricethezav/gitleaks-action@master
-  #       continue-on-error: true 
+  SECRET:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./${{ env.FOLDER_APP }}
+    needs: init
+    name: Secret-Scanner
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Secret Detection
+        uses: zricethezav/gitleaks-action@master
+        continue-on-error: true 
 
-  # trivy-security:
-  #   runs-on: ubuntu-latest
-  #   defaults:
-  #     run:
-  #       working-directory: ./${{ env.FOLDER_APP }}
-  #   needs: init
-  #   continue-on-error: true
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v3
+  trivy-security:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./${{ env.FOLDER_APP }}
+    needs: init
+    continue-on-error: true
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-  #     - name: Build an image from Dockerfile
-  #       run: |
-  #         docker build -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }} ${{ env.FOLDER_APP }}/dockerfile
+      - name: Build an image from Dockerfile
+        run: |
+          docker build -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }} ${{ env.FOLDER_APP }}/dockerfile
 
-  #     - name: Run Trivy vulnerability scanner
-  #       uses: aquasecurity/trivy-action@master
-  #       with:
-  #         image-ref: '${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}'
-  #         format: 'sarif'
-  #         output: 'trivy-results.sarif'
-  #         severity: 'CRITICAL,HIGH'
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: '${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+          severity: 'CRITICAL,HIGH'
 
-  #     - name: Upload Trivy scan results to GitHub Security tab
-  #       uses: github/codeql-action/upload-sarif@v2
-  #       with:
-  #         sarif_file: 'trivy-results.sarif'
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: 'trivy-results.sarif'
 
   build-docker:
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: ./${{ env.FOLDER_APP }}
-    # needs: trivy-security
+    needs: trivy-security
     steps:
     - uses: actions/checkout@v3
     - name: Set up QEMU
