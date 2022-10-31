@@ -58,7 +58,7 @@ se agrega nuevas carpetas para el despliegue de contenedor ngingx que cuenta con
 
 - Asegúrese de que el proxy nginx esté configurado correctamente para representar ambas aplicaciones.   
 
-    https://github.com/wnervhq/bootcamp-final-challenge/blob/d2650dbcaf4c9e45c5c49f431d25185ec679b1b7/hello-world-nginx/templates/default.conf.template#L1
+    https://github.com/wnervhq/bootcamp-final-challenge/blob/d2650dbcaf4c9e45c5c49f431d25185ec679b1b7/hello-world-nginx/templates/default.conf.template#L1:L18
 
 - Revisar las aplicaciones para la preparación de la producción.
 
